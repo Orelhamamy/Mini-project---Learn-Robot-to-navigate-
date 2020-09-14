@@ -9,17 +9,19 @@ rospy.init_node('teleop_by_arrows')
 pub_vel_cmd = rospy.Publisher('cmd_vel', Twist, queue_size = 1)
 senstive = 1
 
+def stop(pub, msg): # msg - geometry_msg - Twist
+    msg.linear.x = 0 
+    msg.angular.z = 0
+    pub.publish(msg)
+    
 def move(linear, angular):
     global pub_vel_cmd, senstive
-    start_time = time.time()
     msg = Twist()
     msg.linear.x = linear * senstive
     msg.angular.z = angular * senstive
     pub_vel_cmd.publish(msg)
     time.sleep(.75)
-    msg.linear.x = 0 
-    msg.angular.z = 0
-    pub_vel_cmd.publish(msg)
+    stop(pub_vel_cmd, msg)
     
         
 def listener():
