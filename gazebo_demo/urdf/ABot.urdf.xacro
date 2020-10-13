@@ -69,7 +69,7 @@
   <link name="right_wheel">
   <inertial>
     <origin rpy="1.5707963267948966 0 0" xyz="0 0 0" />
-    <mass value="0.1" />
+    <mass value="0.5" />
     <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
   </inertial>
   <visual>
@@ -111,7 +111,7 @@
   <link name="left_wheel">
   <inertial>
     <origin rpy="1.5707963267948966 0 0" xyz="0 0 0" />
-    <mass value="0.1" />
+    <mass value="0.5" />
     <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
   </inertial>
   <visual>
@@ -419,7 +419,7 @@
       </image>
       <clip>
         <near>0.05</near>
-        <far>3</far>
+        <far>10</far>
       </clip>
     </camera>
     <plugin name="depth_camera_controller" filename="libgazebo_ros_openni_kinect.so">
@@ -434,7 +434,7 @@
       <pointCloudTopicName>/depth_camera/depth/points</pointCloudTopicName>
       <frameName>depth_camera_link</frameName>
       <pointCloudCutoff>0.5</pointCloudCutoff>
-      <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
+      <pointCloudCutoffMax>5.0</pointCloudCutoffMax>
       <distortionK1>0.00000001</distortionK1>
       <distortionK2>0.00000001</distortionK2>
       <distortionK3>0.00000001</distortionK3>
