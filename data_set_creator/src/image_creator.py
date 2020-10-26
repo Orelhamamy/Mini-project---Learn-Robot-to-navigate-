@@ -8,11 +8,13 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import Int16
 import cv2
 import pickle
+import numpy as np
 
-intervals = .75 # Sec between images
+intervals = 1 # Sec between images
 height = 128
 width = 128
-
+depth_camera = '/depth_camera/depth/image_raw'
+color_camera = '/depth_camera/color/image_raw'
 class images_buffer():
     def __init__(self, img):
         img = cv2.resize(img,(width, height))
@@ -31,14 +33,25 @@ class images_buffer():
     def save_as_jpg(self, path =''):
         time = rospy.get_time()
         titles = [('{:.2f}_{:d}'.format(time, i+1)) for i in range(3)]
+        np.save('{}/{}'.format(path, titles[0]), self.img_one)
+        np.save('{}/{}'.format(path, titles[1]), self.img_two)
+        np.save('{}/{}'.format(path, titles[2]), self.img_three)
+        '''
         cv2.imwrite('{}/{}.jpg'.format(path, titles[0]), self.img_one)
         cv2.imwrite('{}/{}.jpg'.format(path, titles[1]), self.img_two)
         cv2.imwrite('{}/{}.jpg'.format(path, titles[2]), self.img_three)
+        ''' 
         return '{:.2f}'.format(time)
 
 def get_data(event, img_buffer, bridge):
-    img_msg = rospy.wait_for_message('/depth_camera/color/image_raw', Image)
-    img = bridge.imgmsg_to_cv2(img_msg)
+    global depth_camera, color_camera
+    img_msg = rospy.wait_for_message(depth_camera, Image)
+    img = bridge.imgmsg_to_cv2(img_msg, desired_encoding ="passthrough")
+    ''' Display Img from depth camera
+    img_10 = img*0.1
+    cv2.imshow('123',img_10)
+    cv2.waitKey(20)
+    '''
     img_buffer.recive_img(img)
     print(rospy.get_time())
 
@@ -50,10 +63,13 @@ def save_data_set(path, name, data):
     
 def main(bridge):
     # st = rospy.get_time()
-    global intervals
+    global intervals, depth_camera, color_camera
     path='/home/lab/Orel_ws/Training_data'
-    img_msg = rospy.wait_for_message('/depth_camera/color/image_raw', Image)
-    img_buffer = images_buffer(bridge.imgmsg_to_cv2(img_msg))
+    img_msg = rospy.wait_for_message(depth_camera, Image)
+    try: 
+        img_buffer = images_buffer(bridge.imgmsg_to_cv2(img_msg))
+    except CvBridgeError:
+        pass 
     get_data_lambada = lambda x: get_data(x, img_buffer, bridge)
     output = []
     # output_with_img = []

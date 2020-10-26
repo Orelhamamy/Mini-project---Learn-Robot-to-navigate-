@@ -35,24 +35,21 @@ def move(linear, angular):
 def listener():
     global angular_speed, linear_speed
     key = getkey()
+    count = 0
     while not rospy.is_shutdown():
         while not key:
             True
         if key==keys.UP:
             key_publisher.publish(1)
-            print(rospy.get_time())
             move(linear_speed,0)
         elif key==keys.DOWN:
             key_publisher.publish(2)
-            print(rospy.get_time())
             move(-linear_speed,0)
         elif key==keys.RIGHT:
             key_publisher.publish(3)
-            print(rospy.get_time())
             move(0,-angular_speed)
         elif key==keys.LEFT:
             key_publisher.publish(4)
-            print(rospy.get_time())
             move(0,angular_speed)
         elif key=='q':
             linear_speed = linear_speed*1.1
@@ -63,6 +60,8 @@ def listener():
         elif key=='s':
             angular_speed = angular_speed*0.9
         key = getkey()
+        count +=1
+        print(count)
         
 if __name__ == '__main__':
     try:
